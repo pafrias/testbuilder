@@ -1,3 +1,4 @@
+
   //This version of detectNetwork is based on comparisons to objects, instead of inline values
   //Ideally, this means that new card networks can be added as objects, and the function will just need to be iterated again
   //Input has to be converted to strings, as only the length can be an integer object literal
@@ -65,9 +66,5 @@ var detectNetwork = function(cardNumber) { //stringifies, checks for valid credi
 };
 
 console.log(detectNetwork(62213978901234567))
-
-
-
-
 
 
