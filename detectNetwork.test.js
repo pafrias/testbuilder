@@ -47,11 +47,11 @@ describe('Visa', function() {
 });
 
 describe('MasterCard', function() {
-  var assert = chai.assert;
+  var assert = chai.should();
   for (var prefix = 51; prefix <=55; prefix++) {
     (function(prefix) {
       it('has a prefix of ' + prefix + ' and a length of 16', function() {
-        assert(detectNetwork(prefix + '34567890123456') === 'MasterCard');
+        detectNetwork(prefix + '34567890123456').should.equal('MasterCard');
       })
     })(prefix)
   }
@@ -59,13 +59,60 @@ describe('MasterCard', function() {
 
 describe('Discover', function() {
   var assert = chai.assert;
-  for (var prefix = 644; prefix <=649; prefix++) {
+  for (var prefix = 644; prefix <= 649; prefix++) {
     (function(prefix) {
       it('has a prefix of ' + prefix + ' and a length of 16', function() {
-        assert(detectNetwork(prefix + '34567890123456') === 'Discover');
+        assert(detectNetwork(prefix + '4567890123456') === 'Discover');
+      })
+      it('has a prefix of ' + prefix + ' and a length of 19', function() {
+        assert(detectNetwork(prefix + '4567890123456789') === 'Discover');
       })
     })(prefix)
   }
+  it('has a prefix of 65 and a length of 16', function() {
+    assert(detectNetwork('6511567890123456') === 'Discover');
+  });
+  it('has a prefix of 6011 and a length of 16', function() {
+    assert(detectNetwork('6011567890123456') === 'Discover');
+  });
+  it('has a prefix of 65 and a length of 19', function() {
+    assert(detectNetwork('6511567890123456789') === 'Discover');
+  });
+  it('has a prefix of 6011 and a length of 19', function() {
+    assert(detectNetwork('6011567890123456789') === 'Discover');
+  });
+});
+
+describe('Maestro', function() {
+  var assert = chai.assert;
+  var cardNumbers = [];
+  var prefixes = ['5018', '5020', '5038', '6304'];
+  var fill = '567890123456789';
+  for (var i = 0; i < prefixes.length; i++) {
+    for (var suffix = 8; suffix <= 15; suffix++) {
+      cardNumbers.push(prefixes[i] + fill.slice(0, suffix)); //adds all prefix/length combos
+    }
+  }
+  cardNumbers.forEach(number => {
+    it('has a prefix of ' + number.slice(0,4) + ' and a length of ' + number.length, function() {
+      assert(detectNetwork(number) === 'Maestro');
+    })
+  });
+  /*for (var suffix = 8; suffix <= 15; suffix++) {    nested for loop, can't get to work
+    for (var i = 0; i < prefixes.length; i++) {       continue pursuing for later patch
+      (function() {
+        it('has a prefix of ' + prefixes[i] + ' and a length of ' + (suffix + prefixes[i].length), function() {
+          assert(detectNetwork(prefixes[i] + fill.slice(0,suffix)) === 'Maestro');
+        })
+      })()
+    }
+  }*/
+});
+
+describe('should support China UnionPay', function() {
+  var should = chai.should();
+
+
 });
 /*
   it('has a prefix of 65 and a length of 16', function() {
@@ -82,11 +129,9 @@ describe('Discover', function() {
   });
 });*/
 
-describe('Maestro', function() {
-  var assert = chai.assert;
-  
-  it('has a prefix of ')
-});
 
-describe('should support China UnionPay')
-describe('should support Switch')
+
+
+
+
+
