@@ -1,36 +1,58 @@
-  // Note: `cardNumber` will always be a string
-  // The Diner's Club network always starts with a 38 or 39 and is 14 digits long
-  // The American Express network always starts with a 34 or 37 and is 15 digits long
+//This version of detectNetwork is based on comparisons to objects, instead of inline values
+//Ideally, this means that new card networks can be added as objects, and the function will just need to be iterated again
+//Input has to be converted to strings, as only the length can be an integer object literal
+const dinersClub = {
+  len : 14,
+  prefix : ['38', '39']
+}
 
-var detectNetwork = function(cardNumber) { //stringifies, checks for valid credit cards
+const amEx = {
+  len: 15,
+  prefix: ['34', '37']
+}
+
+const visa = {
+  len: [13, 16, 19],
+  prefix: '4'
+}
+
+const masterCard = {
+  len: 16,
+  prefix: ['51', '52', '53', '54', '55']
+}
+
+const discover = {
+  len: [16, 19],
+  prefix: ['65', '644', '645', '646', '647', '648', '649', '6011']
+}
+
+const maestro = {
+  len: null, //unsure how to plug in range in a more elegeant way
+  prefix: ['5018', '5020', '5038', '6304']
+}
+
+var detectNetwork = function(cardNumber) { //stringifies, checks for valid credit cards  
   let cardNum = cardNumber.toString();
   let cardLen = cardNum.length;
-  if (cardLen === 14 && (cardNum.slice(0,2) === '38' || cardNum.slice(0,2) === '39')) {
+  if (dinersClub.len === cardLen && dinersClub.prefix.includes(cardNum.slice(0,2))) {
     return 'Diner\'s Club';
-  }  else if (cardLen === 15 && (cardNum.slice(0,2) === '34' || cardNum.slice(0,2) === '37')) {
+  }  else if (amEx.len === cardLen && amEx.prefix.includes(cardNum.slice(0,2))) {
     return 'American Express';
-  }  else if ((cardLen === 13 || cardLen === 16 || cardLen == 19) && cardNum.slice(0,1) === '4') {
+  }  else if (visa.len.includes(cardLen) && visa.prefix === cardNum[0]) {
     return 'Visa';
-  } else if (cardLen === 16 && (cardNum.slice(0,2) === '51' || cardNum.slice(0,2) === '52' || cardNum.slice(0,2) === '53' || cardNum.slice(0,2) === '54' || cardNum.slice(0,2) === '55')) {
+  } else if (masterCard.len === cardLen && masterCard.prefix.includes(cardNum.slice(0,2))) {
     return 'MasterCard';
-  } else if ((cardLen === 16 || cardLen === 19) && (cardNum.slice(0,2) === '65' || cardNum.slice(0,4) === '6011' || cardNum.slice(0,7) === '644-649')) {
+  } else if (discover.len.includes(cardLen) && (discover.prefix.includes(cardNum.slice(0,2)) || discover.prefix.includes(cardNum.slice(0,3)) || discover.prefix.includes(cardNum.slice(0,4)))) {
     return 'Discover';
-  } else if ((cardLen > 11 && cardLen < 20) && (cardNum.slice(0,4) === '5018' || cardNum.slice(0,4) === '5020' || cardNum.slice(0,4) === '5038' || cardNum.slice(0,4) === '6304')) {
+  } else if ((cardLen > 11 && cardLen < 20) && (maestro.prefix.includes(cardNum.slice(0,4)))) {
     return 'Maestro';
   } else {
     return 'Invalid Card Number';
   }
 };
 
-/*function testNotInt(numbers) { // checks for non-numbers, then returns false for all numbers
-  let numArray = numbers.split('');
-  return (numArray.some(num => isNaN(parseInt(num))));
-};*/
+testNums = [51 + '12345678901234', '38345678901234','393456789012345','4234567890123456', 644 + '4567890123456', '5018567890122345'];
 
-
-/*
-testNums = [124567, 38145824658298,'3814582be4658298','374572169854265', 124567, '38145824658298'];
-
-for (var iter = 0; iter < 6; iter++) {
+for (var iter = 0; iter < testNums.length; iter++) {
   console.log(detectNetwork(testNums[iter]));
-}*/
+}
