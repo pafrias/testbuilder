@@ -1,3 +1,5 @@
+var assert = chai.assert;
+var should = chai.should();
 
 describe('Diner\'s Club', function() {
   it('has a prefix of 38 and a length of 14', function() {
@@ -31,7 +33,6 @@ describe('American Express', function() {
 });
 
 describe('Visa', function() {
-  var assert = chai.assert;
 
   it('has a prefix of 4 and a length of 13', function() {
     assert(detectNetwork('4234567890123') === 'Visa');
@@ -47,7 +48,7 @@ describe('Visa', function() {
 });
 
 describe('MasterCard', function() {
-  var assert = chai.should();
+
   for (var prefix = 51; prefix <=55; prefix++) {
     (function(prefix) {
       it('has a prefix of ' + prefix + ' and a length of 16', function() {
@@ -58,7 +59,7 @@ describe('MasterCard', function() {
 });
 
 describe('Discover', function() {
-  var assert = chai.assert;
+
   for (var prefix = 644; prefix <= 649; prefix++) {
     (function(prefix) {
       it('has a prefix of ' + prefix + ' and a length of 16', function() {
@@ -84,33 +85,23 @@ describe('Discover', function() {
 });
 
 describe('Maestro', function() {
-  var assert = chai.assert;
+
   var cardNumbers = [];
   var prefixes = ['5018', '5020', '5038', '6304'];
-  var fill = '567890123456789';
-  for (var i = 0; i < prefixes.length; i++) {
-    for (var suffix = 8; suffix <= 15; suffix++) {
-      cardNumbers.push(prefixes[i] + fill.slice(0, suffix)); //adds all prefix/length combos
+  var fill = '5678901234567890';
+  for (var suffix = 8; suffix <= 15; suffix++) {    
+    for (var i = 0; i < prefixes.length; i++) {      
+      (function(i, suffix) {
+        it('has a prefix of ' + prefixes[i] + ' and a length of ' + (suffix + prefixes[i].length), function() {
+          detectNetwork(`${prefixes[i]}${fill.slice(0,suffix)}`).should.equal('Maestro');
+        })
+      })(i, suffix);
     }
   }
-  cardNumbers.forEach(number => {
-    it('has a prefix of ' + number.slice(0,4) + ' and a length of ' + number.length, function() {
-      assert(detectNetwork(number) === 'Maestro');
-    })
-  });
-  /*for (var suffix = 8; suffix <= 15; suffix++) {    nested for loop, can't get to work
-    for (var i = 0; i < prefixes.length; i++) {       continue pursuing for later patch
-      (function() {
-        it('has a prefix of ' + prefixes[i] + ' and a length of ' + (suffix + prefixes[i].length), function() {
-          assert(detectNetwork(prefixes[i] + fill.slice(0,suffix)) === 'Maestro');
-        })
-      })()
-    }
-  }*/
 });
 
 describe('Switch', function() {
-  var should = chai.should();
+
   var filler = '12345678901234567890';
   var prefixes = ['4903', '4905', '4911', '4936', '564182', '633110', '6333', '6759'];
   prefixes.forEach(prefix => {
@@ -127,7 +118,7 @@ describe('Switch', function() {
 });
 
 describe('China UnionPay', function() {
-  var should = chai.should();
+
   for (var prefix = 624; prefix <=626; prefix ++) {
     (function(prefix) {
       it(`has a prefix of ${prefix} and a length of 16`, function() {
